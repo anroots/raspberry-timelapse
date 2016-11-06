@@ -17,7 +17,7 @@ fswebcam -r 1920x1080 --skip 10 --font=/usr/share/fonts/OpenSans-Bold.ttf:32 --b
 	curl  -X POST -H "Content-type: application/json" \
 	-d '{
       "title": "Rasperry Timelapse",
-      "text": "Took a photograph, saved to $IMG_PATH",
+      "text": "Took a photograph, saved to '"$IMG_PATH"'",
       "priority": "normal",
       "tags": ["network:atc"],
       "alert_type": "info"

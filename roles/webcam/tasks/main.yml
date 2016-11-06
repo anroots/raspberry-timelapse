@@ -1,0 +1,31 @@
+- name: Install image capture tool
+  apt: name=fswebcam state=present update_cache=yes cache_valid_time=3600
+
+- name: Make directory for picture storage
+  file: path=/home/pi/timelapse state=directory mode=755 owner=pi group=pi
+
+- name: Take one photo every minute
+  cron: name="Take photo" minute="*" hour="*" job="/opt/take-photo.sh > /dev/null"
+
+- name: Copy timelapse script
+  template: src=take-photo.sh dest=/opt/ mode=755
+
+- name: Create NAS mountpoint
+  file: path=/nas state=directory mode=777
+
+- name: Mount NAS folder via fstab
+  mount:
+    fstype: cifs
+    name: /nas
+    opts: "username={{ nas_username }},password={{ nas_password }},defaults,noauto,x-systemd.automount,_netdev"
+    src: "//{{ nas_ip }}/misc/Timelapse"
+    state: present
+
+- name: Transfer images to NAS once a day
+  cron: name="Transfer day images" minute="59" hour="23" job="mv /home/pi/timelapse/201* /nas/ > /dev/null"
+
+- name: Install Open Sans font
+  unarchive: src=http://dl.1001fonts.com/open-sans.zip dest=/usr/share/fonts remote_src=yes
+
+- name: Refresh font cace
+  command: fc-cache -fv

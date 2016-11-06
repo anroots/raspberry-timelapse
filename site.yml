@@ -1,0 +1,10 @@
+- name: Install webcam timelapse
+  hosts: pi
+  become: true
+  vars:
+    nas_ip: "{{ lookup('env','NAS_IP') }}"
+    nas_password: "{{ lookup('env','NAS_PASSWORD') }}"
+    nas_username: rpi
+    datadog_api_key: "{{ lookup('env','DATADOG_API_KEY') }}"
+  roles: 
+    - webcam

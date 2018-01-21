@@ -1,5 +1,8 @@
-- name: Install image capture tool
-  apt: name=fswebcam state=present update_cache=yes cache_valid_time=3600
+- name: Install image capture tools
+  apt: name={{ item }} state=present update_cache=yes cache_valid_time=3600
+  with_items:
+    - mencoder
+    - fswebcam
 
 - name: Make directory for picture storage
   file: path=/home/pi/timelapse state=directory mode=755 owner=pi group=pi
